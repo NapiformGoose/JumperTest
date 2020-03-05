@@ -64,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Bootstrapper.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IUpdatable.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ControlManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\UpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Models\Platform.cs" />
+    <Compile Include="Assets\Scripts\Models\Player.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projects/JumperTest/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
