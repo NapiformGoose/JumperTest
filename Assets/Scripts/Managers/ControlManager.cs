@@ -1,69 +1,64 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Interfaces;
 
-public class ControlManager : IUpdatable
+namespace Assets.Scripts.Managers
 {
-    IUpdateManager _updateManager;
-    Player _player;
-    Platform _platform;
-    Rigidbody2D _rigidbody;
-
-    List<Collider2D> list = new List<Collider2D>();
-    ContactFilter2D contactFilter2D = new ContactFilter2D();
-    bool isMove = false;
-    public ControlManager(IUpdateManager updateManager, Player player, Platform platform)
+    public class ControlManager : IUpdatable
     {
-        _updateManager = updateManager;
-        _player = player;
-        _platform = platform;
+        IUpdateManager _updateManager;
+        IObjectStorage _objectStorage;
+        
+        List<Collider2D> _list;
+        ContactFilter2D _contactFilter2D;
 
-        _updateManager.AddUpdatable(this);
-        _player.PlayerGameObject = GameObject.Instantiate(_player.PlayerGameObject);
-        _platform.PlatformGameObject = GameObject.Instantiate(_platform.PlatformGameObject);
-        _rigidbody = _player.PlayerGameObject.GetComponent<Rigidbody2D>();
-    }
-
-    bool onGround()
-    {
-        _rigidbody.OverlapCollider(contactFilter2D, list);
-
-        if (list.Count > 0)
+        public ControlManager(IUpdateManager updateManager, IObjectStorage objectStorage)
         {
-            isMove = false;
-            return true;
+            _updateManager = updateManager;
+            _objectStorage = objectStorage;
+
+            _updateManager.AddUpdatable(this);
+
+            _list = new List<Collider2D>();
+            _contactFilter2D = new ContactFilter2D();
         }
-        return false;
-    }
-    public void CustomUpdate()
-    {
-        if (onGround())
+
+        bool onGround()
+        {
+            _objectStorage.Player.PlayerRigidbody2D.OverlapCollider(_contactFilter2D, _list);
+
+            if (_list.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void CustomUpdate()
         {
             if (Input.GetKey(KeyCode.A))
             {
-                _player.PlayerGameObject.transform.Translate(-0.1f, 0, 0, Space.World);
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(-280, 0), ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x <= -10)
+                {
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(-10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                }
             }
             if (Input.GetKey(KeyCode.D))
             {
-                _player.PlayerGameObject.transform.Translate(0.1f, 0, 0, Space.World);
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(280, 0), ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x >= 10)
+                {
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                }
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (onGround())
             {
-                _rigidbody.AddForce(new Vector2(0, 15f), ForceMode2D.Impulse);
-                isMove = true;
-            }
-        }
-        if (isMove)
-        {
-            if (Input.GetKey(KeyCode.A))
-            {
-                _rigidbody.AddForce(new Vector2(-5f, 0), ForceMode2D.Impulse);
-                isMove = false;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                _rigidbody.AddForce(new Vector2(5f, 0), ForceMode2D.Impulse);
-                isMove = false;
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(0, 300f), ForceMode2D.Impulse);
+                }
             }
         }
     }

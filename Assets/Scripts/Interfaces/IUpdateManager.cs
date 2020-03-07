@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IUpdateManager
+namespace Assets.Scripts.Interfaces
 {
-    void AddUpdatable(IUpdatable updatable);
-    void RemoveUpdatable(IUpdatable updatable);
-    void Start();
-    void Stop();
+    public interface IUpdateManager
+    {
+        void AddUpdatable(IUpdatable updatable);
+        void RemoveUpdatable(IUpdatable updatable);
+        void Start();
+        void Stop();
+    }
 }

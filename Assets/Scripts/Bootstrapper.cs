@@ -1,28 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Managers;
+using Assets.Scripts.Interfaces;
 
-public class Bootstrapper : MonoBehaviour
+namespace Assets.Scripts
 {
-    IUpdateManager _updateManager;
-    ControlManager _controlManager;
-    void Start()
+    public class Bootstrapper : MonoBehaviour
     {
-        var updateManagerObject = new GameObject("UpdateManager");
-        _updateManager = updateManagerObject.AddComponent<UpdateManager>();
-        Player player = new Player();
-        player.Speed = 7f;
-        player.PlayerGameObject = Resources.Load("Prefabs/Player") as GameObject;
+        IUpdateManager _updateManager;
+        ControlManager _controlManager;
+        IPlatformManager _platformManager;
+        IObjectStorage _objectStorage;
+        void Start()
+        {
+            var updateManagerObject = new GameObject("UpdateManager");
+            _updateManager = updateManagerObject.AddComponent<UpdateManager>();
 
-        Platform platform = new Platform();
-        platform.PlatformGameObject = Resources.Load("Prefabs/Platform") as GameObject;
-        _controlManager = new ControlManager(_updateManager, player, platform);
+            _objectStorage = new ObjectStorage(Constants.platformCount);
+            _objectStorage.Initialization(Constants.playerPrefabName, Constants.platformPrefabName);
+            _controlManager = new ControlManager(_updateManager, _objectStorage);
 
-        _updateManager.Start();
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("Box went through!");
+            _platformManager = new PlatformManager(_updateManager, _objectStorage);
+            _platformManager.StartGenerate();
+            _updateManager.Start();
+        }
     }
 }
 

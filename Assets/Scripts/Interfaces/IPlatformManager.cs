@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Assets.Scripts.Interfaces
 {
-    public interface IUpdatable
+    public interface IPlatformManager
     {
-        void CustomUpdate();
+        void StartGenerate();
     }
 }

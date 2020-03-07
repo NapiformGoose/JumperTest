@@ -64,9 +64,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Bootstrapper.cs" />
+    <Compile Include="Assets\Scripts\Constants.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IObjectStorage.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IPlatformManager.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IUpdatable.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IUpdateManager.cs" />
     <Compile Include="Assets\Scripts\Managers\ControlManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ObjectStorage.cs" />
+    <Compile Include="Assets\Scripts\Managers\PlatformManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UpdateManager.cs" />
     <Compile Include="Assets\Scripts\Models\Platform.cs" />
     <Compile Include="Assets\Scripts\Models\Player.cs" />

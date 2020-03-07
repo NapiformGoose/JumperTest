@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player
+namespace Assets.Scripts.Models
 {
-    public GameObject PlayerGameObject { get; set; }
-    public float Speed { get; set; }
+    public class Player
+    {
+        public string Name { get; set; }
+        public GameObject PlayerGameObject { get; set; }
+        public float Speed { get; set; }
+        public Rigidbody2D PlayerRigidbody2D { get; set; }
+        public Collider2D PlayerCollider2D { get; set; }
+    }
 }

@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Platform
+namespace Assets.Scripts.Models
 {
-    public GameObject PlatformGameObject { get; set; }
+    public class Platform
+    {
+        public string Name { get; set; }
+        public GameObject PlatformGameObject { get; set; }
+        public Rigidbody2D PlarformRigidbody2D { get; set; }
+        public Collider2D PlatformCollider2D { get; set; }
+
+    }
 }
