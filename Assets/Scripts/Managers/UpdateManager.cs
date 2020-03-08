@@ -31,16 +31,12 @@ public class UpdateManager : MonoBehaviour, IUpdateManager
     public void CustomStart()
     {
         IsOpenUpdate = true;
+        Time.timeScale = 1;
     }
 
     public void Stop()
     {
         IsOpenUpdate = false;
         Time.timeScale = 0;
-    }
-    public void Continue()
-    {
-        IsOpenUpdate = true;
-        Time.timeScale = 1;
     }
 }

@@ -6,7 +6,9 @@ namespace Assets.Scripts.Interfaces
 {
     public interface IControlManager
     {
-        Constants.ControlType CurrentControlType { get; set; }
+        ControlType CurrentControlType { get; set; }
+        int CurrentScore { get; set; }
+
         void ResetPlayerPosition();
         void Initialization();
     }

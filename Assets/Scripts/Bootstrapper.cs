@@ -25,7 +25,8 @@ namespace Assets.Scripts
 
             _platformManager = new PlatformManager(_updateManager, _objectStorage);
 
-            _UIManager = new UIManager(_updateManager, _controlManager, _platformManager);
+            _UIManager = new UIManager(_updateManager, _controlManager, _platformManager, _objectStorage);
+            _UIManager.ShowMainMenu();
         }
         
     }

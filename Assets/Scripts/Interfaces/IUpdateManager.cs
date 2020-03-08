@@ -10,6 +10,5 @@ namespace Assets.Scripts.Interfaces
         void RemoveUpdatable(IUpdatable updatable);
         void CustomStart();
         void Stop();
-        void Continue();
     }
 }

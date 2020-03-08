@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Interfaces
 {
+    public enum ControlType { ArrayControl, WASDControl, Default };
     public interface IPlatformManager
     {
         void StartGenerate();

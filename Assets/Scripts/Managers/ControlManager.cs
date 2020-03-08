@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Models;
 
 namespace Assets.Scripts.Managers
 {
@@ -9,11 +10,13 @@ namespace Assets.Scripts.Managers
     {
         IUpdateManager _updateManager;
         IObjectStorage _objectStorage;
-        
+        Vector3 _oldPos;
         List<Collider2D> _list;
         ContactFilter2D _contactFilter2D;
 
-        public Constants.ControlType CurrentControlType { get; set; }
+        public int CurrentScore { get; set; }
+        public ControlType CurrentControlType { get; set; }
+
         public ControlManager(IUpdateManager updateManager, IObjectStorage objectStorage)
         {
             _updateManager = updateManager;
@@ -24,13 +27,15 @@ namespace Assets.Scripts.Managers
             _list = new List<Collider2D>();
             _contactFilter2D = new ContactFilter2D();
 
-            CurrentControlType = Constants.ControlType.Default;
+            CurrentControlType = ControlType.Default;
         }
         public void Initialization()
         {
             _objectStorage.Player.PlayerGameObject.SetActive(true);
-            _objectStorage.Player.PlayerGameObject.transform.position = new Vector3(0, 0, 0);
-            _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(0, 0);
+            _objectStorage.Player.PlayerGameObject.transform.position = Constants.playerStartPosition;
+            _objectStorage.Player.PlayerRigidbody2D.velocity = Constants.playerStartVelocity;
+            CurrentScore = 0;
+            _oldPos = new Vector3(0, 0, 0);
         }
         bool onGround()
         {
@@ -43,13 +48,27 @@ namespace Assets.Scripts.Managers
             return false;
         }
 
+        void CalculateScore()
+        {
+            foreach(Platform platform in _objectStorage.Platforms)
+            {
+                if (_objectStorage.Player.PlayerCollider2D.IsTouching(platform.PlatformCollider2D) && _list.Count > 0)
+                {
+                    if (_oldPos.y < _list[0].gameObject.transform.position.y)
+                    {
+                        CurrentScore++;
+                    }
+                    _oldPos = _list[0].gameObject.transform.position;
+                }
+            }
+        }
         public void CustomUpdate()
         {
-            if (CurrentControlType == Constants.ControlType.ArrayControl)
+            if (CurrentControlType == ControlType.ArrayControl)
             {
                 ArrayControl();
             }
-            if (CurrentControlType == Constants.ControlType.WASDControl || CurrentControlType == Constants.ControlType.Default)
+            if (CurrentControlType == ControlType.WASDControl || CurrentControlType == ControlType.Default)
             {
                 WASDControl();
             }
@@ -58,26 +77,28 @@ namespace Assets.Scripts.Managers
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(0, 300f), ForceMode2D.Impulse);
+                    _objectStorage.Player.PlayerRigidbody2D.AddForce(Constants.playerJumpForce, ForceMode2D.Impulse);
                 }
             }
+            CalculateScore();
         }
+
         void ArrayControl()
         {
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(-280, 0), ForceMode2D.Force);
-                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x <= -10)
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(Constants.playerLeftLateralForce, ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x <= -Constants.maxPlayerVelocity)
                 {
-                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(-10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(-Constants.maxPlayerVelocity, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
                 }
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(280, 0), ForceMode2D.Force);
-                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x >= 10)
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(Constants.playerRightLateralForce, ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x >= Constants.maxPlayerVelocity)
                 {
-                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(Constants.maxPlayerVelocity, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
                 }
             }
         }
@@ -85,24 +106,24 @@ namespace Assets.Scripts.Managers
         {
             if (Input.GetKey(KeyCode.A))
             {
-                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(-280, 0), ForceMode2D.Force);
-                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x <= -10)
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(Constants.playerLeftLateralForce, ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x <= -Constants.maxPlayerVelocity)
                 {
-                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(-10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(-Constants.maxPlayerVelocity, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
                 }
             }
             if (Input.GetKey(KeyCode.D))
             {
-                _objectStorage.Player.PlayerRigidbody2D.AddForce(new Vector2(280, 0), ForceMode2D.Force);
-                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x >= 10)
+                _objectStorage.Player.PlayerRigidbody2D.AddForce(Constants.playerRightLateralForce, ForceMode2D.Force);
+                if (_objectStorage.Player.PlayerRigidbody2D.velocity.x >= Constants.maxPlayerVelocity)
                 {
-                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(10, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
+                    _objectStorage.Player.PlayerRigidbody2D.velocity = new Vector2(Constants.maxPlayerVelocity, _objectStorage.Player.PlayerRigidbody2D.velocity.y);
                 }
             }
         }
         public void ResetPlayerPosition()
         {
-            _objectStorage.Player.PlayerGameObject.transform.position = new Vector3(0, 0, 0);
+            _objectStorage.Player.PlayerGameObject.transform.position = Constants.playerStartPosition;
         }
     }
 }
