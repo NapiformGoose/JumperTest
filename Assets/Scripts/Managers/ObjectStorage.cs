@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Models;
 using Assets.Scripts.Interfaces;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Managers
 {
@@ -13,6 +14,8 @@ namespace Assets.Scripts.Managers
         public Player Player { get; set; }
         public int Score { get; set; }
         public Collider2D LowerTrigger { get; set; }
+
+        public IList<Button> Buttons { get; set; }
 
         public ObjectStorage(int platformCount)
         {
@@ -33,10 +36,12 @@ namespace Assets.Scripts.Managers
         }
 
         #region LoadData
-
         Collider2D LoadLowerTrigger()
         {
-            return GameObject.Find(Constants.lowerTriggerName).GetComponent<Collider2D>();
+            GameObject lowerTriggerGameObject = GameObject.Find(Constants.lowerTriggerName);
+            lowerTriggerGameObject.SetActive(false);
+            
+            return lowerTriggerGameObject.GetComponent<Collider2D>();
         }
         void LoadPrefabs()
         {
@@ -50,10 +55,11 @@ namespace Assets.Scripts.Managers
             {
                 Name = name,
                 Speed = 7f,
-                PlayerGameObject = GameObject.Instantiate(_prefabs["player"], new Vector3(0, 0, 0), Quaternion.identity)
+                PlayerGameObject = GameObject.Instantiate(_prefabs["player"])
             };
             player.PlayerRigidbody2D = player.PlayerGameObject.GetComponent<Rigidbody2D>();
             player.PlayerCollider2D = player.PlayerGameObject.GetComponent<Collider2D>();
+            player.PlayerGameObject.SetActive(false);
             return player;
         }
 
@@ -62,7 +68,7 @@ namespace Assets.Scripts.Managers
             Platform platform = new Platform
             {
                 Name = name,
-                PlatformGameObject = GameObject.Instantiate(_prefabs["platform"], new Vector3(0, -2, 0), Quaternion.identity)
+                PlatformGameObject = GameObject.Instantiate(_prefabs["platform"])
             };
             platform.PlarformRigidbody2D = platform.PlatformGameObject.GetComponent<Rigidbody2D>();
             platform.PlatformCollider2D = platform.PlatformGameObject.GetComponent<Collider2D>();

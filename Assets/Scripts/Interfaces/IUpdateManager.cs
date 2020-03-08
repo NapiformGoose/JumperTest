@@ -8,7 +8,8 @@ namespace Assets.Scripts.Interfaces
     {
         void AddUpdatable(IUpdatable updatable);
         void RemoveUpdatable(IUpdatable updatable);
-        void Start();
+        void CustomStart();
         void Stop();
+        void Continue();
     }
 }

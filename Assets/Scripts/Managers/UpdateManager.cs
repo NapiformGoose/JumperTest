@@ -28,7 +28,7 @@ public class UpdateManager : MonoBehaviour, IUpdateManager
         }
     }
 
-    public void Start()
+    public void CustomStart()
     {
         IsOpenUpdate = true;
     }
@@ -36,5 +36,11 @@ public class UpdateManager : MonoBehaviour, IUpdateManager
     public void Stop()
     {
         IsOpenUpdate = false;
+        Time.timeScale = 0;
+    }
+    public void Continue()
+    {
+        IsOpenUpdate = true;
+        Time.timeScale = 1;
     }
 }
